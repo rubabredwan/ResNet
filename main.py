@@ -110,7 +110,7 @@ def validate():
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
 
-    return correct / total, running_loss / 10000 * 128
+    return correct / total * 100, running_loss / 10000 * 128
 
 for epoch in range(0, epochs):
     start = time.time()
@@ -118,7 +118,7 @@ for epoch in range(0, epochs):
     val_acc, val_loss = validate()
 
     print('Epoch %d/%d' % (epoch + 1, epochs))
-    print('%.2f - loss: %.2f - acc: %.2f - val_acc: %.2f - val_loss: %.2f' % (
+    print('%.2f - loss: %.4f - acc: %.2f - val_loss: %.4f - val_acc: %.2f' % (
         time.time() - start,
         loss, acc, val_loss, val_acc))
 
@@ -135,5 +135,5 @@ torch.save({
     'model_state_dict': model.state_dict(),
     'optimizer_state_dict': optimizer.state_dict(),
     'history':history
-    }, 'bal.pth')
+    }, 'resnet20.pth')
 

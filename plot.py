@@ -2,7 +2,7 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 
-checkpoint = torch.load('bal.pth')
+checkpoint = torch.load('resnet20.pth')
 
 def plot(history):
     fig, ax = plt.subplots(2, 1, figsize = (10, 10))
