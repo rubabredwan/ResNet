@@ -11,8 +11,8 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from resnet import ResNet20, ResNet32, ResNet44, ResNet56
 
-epochs = 200
-batch_size = 128
+epochs = 20
+0batch_size = 128
 lr = 0.1
 momentum = 0.9
 weight_decay = 0.0001
