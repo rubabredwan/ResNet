@@ -11,7 +11,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from resnet import ResNet20, ResNet32, ResNet44, ResNet56
 
-epochs = 20
+epochs = 200
 batch_size = 128
 lr = 0.1
 momentum = 0.9
@@ -112,6 +112,15 @@ for net in (ResNet20, ResNet32, ResNet44, ResNet56):
 
         return correct / total * 100, running_loss / 10000 * 128
 
+    def save_checkpoint(epoch):
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'history':history
+            }, path + net.__name__ + '.pth')
+
+
     for epoch in range(0, epochs):
         start = time.time()
         acc, loss = train()
@@ -122,7 +131,6 @@ for net in (ResNet20, ResNet32, ResNet44, ResNet56):
             time.time() - start,
             loss, acc, val_loss, val_acc))
 
-
         history['acc'] += [acc]
         history['loss'] += [loss]
         history['val_acc'] += [val_acc]
@@ -130,10 +138,7 @@ for net in (ResNet20, ResNet32, ResNet44, ResNet56):
 
         lr_scheduler.step()
 
-    torch.save({
-        'epoch': epochs,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'history':history
-        }, path + net.__name__ + '.pth')
+        if epoch % 20 == 0:
+            save_checkpoint(epoch)
 
+    save_checkpoint(epochs)

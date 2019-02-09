@@ -23,6 +23,7 @@ def plot(history):
     ax[1].legend(['train', 'validation'])
     ax[1].grid(b=True, linestyle='--')
     
+    fig.subtitle('Resnet')
 
     plt.savefig('plot.png', dpi=100)
     plt.show()
