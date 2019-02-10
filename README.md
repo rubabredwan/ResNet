@@ -1,4 +1,5 @@
 | Model | Accuracy |
+| -------- | ----- |
 | ResNet20 | 92.38 |
 | ResNet32 | 92.41 |
 | ResNet44 | 92.91 |
