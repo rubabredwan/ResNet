@@ -59,6 +59,7 @@ for net in (ResNet20, ResNet32, ResNet44, ResNet56):
                                                         milestones=[100, 150], 
                                                         last_epoch=-1)
     history = {'acc': [], 'loss': [], 'val_acc': [], 'val_loss': []}
+    start_epoch = 0
 
     def load_checkpoint()
         checkpoint = torch.load(path+net.__name__+'.pth')
