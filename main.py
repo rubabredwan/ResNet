@@ -62,6 +62,7 @@ for net in (ResNet20, ResNet32, ResNet44, ResNet56):
     start_epoch = 0
 
     def load_checkpoint():
+        global model, optimizer, lr_scheduler, history, start_epoch
         checkpoint = torch.load(path+net.__name__+'.pth')
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
