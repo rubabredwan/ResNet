@@ -38,12 +38,13 @@ val_loader = torch.utils.data.DataLoader(
     datasets.CIFAR10(root='./data', train=False, transform=transforms.Compose([
         transforms.ToTensor(),
         normalize,
-    ])),
-    batch_size=batch_size, shuffle=False,
+    ]))
+,   batch_size=batch_size, shuffle=False,
     num_workers=4)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(device)
+
 
 for net in (ResNet20, ResNet32, ResNet44, ResNet56):
     
@@ -51,17 +52,35 @@ for net in (ResNet20, ResNet32, ResNet44, ResNet56):
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
-
     optimizer = torch.optim.SGD(model.parameters(), lr=lr,
                                 momentum=momentum,
                                 weight_decay=weight_decay)
-
     lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, 
                                                         milestones=[100, 150], 
                                                         last_epoch=-1)
-
     history = {'acc': [], 'loss': [], 'val_acc': [], 'val_loss': []}
 
+    def load_checkpoint()
+        checkpoint = torch.load(path+net.__name__+'.pth')
+        model.load_state_dict(checkpoint['model_state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        lr_scheduler.load_state_dict(checkpoint['lr_scheduler_state_dict'])
+        history = checkpoint['history']
+        start_epoch = checkpoint['epoch']
+
+    def save_checkpoint(epoch):
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'lr_scheduler_state_dict': lr_scheduler.state_dict(),
+            'history':history
+            }, path + net.__name__ + '.pth')
+
+
+    if os.path.exists(path+net.__name__+'.pth'):
+        load_checkpoint()
+    
     def train():
         model.train()
 
@@ -112,16 +131,8 @@ for net in (ResNet20, ResNet32, ResNet44, ResNet56):
 
         return correct / total * 100, running_loss / 10000 * 128
 
-    def save_checkpoint(epoch):
-        torch.save({
-            'epoch': epoch,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'history':history
-            }, path + net.__name__ + '.pth')
 
-
-    for epoch in range(0, epochs):
+    for epoch in range(start_epoch, epochs):
         start = time.time()
         acc, loss = train()
         val_acc, val_loss = validate()
@@ -139,6 +150,6 @@ for net in (ResNet20, ResNet32, ResNet44, ResNet56):
         lr_scheduler.step()
 
         if epoch % 20 == 0:
-            save_checkpoint(epoch)
+            save_checkpoint(epoch+1)
 
     save_checkpoint(epochs)
