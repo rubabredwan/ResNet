@@ -12,7 +12,6 @@ for net in ('ResNet20', 'ResNet32', 'ResNet44', 'ResNet56'):
     c = ax[1].plot(history['loss'], linewidth=0.5, label=net)
     ax[1].plot(history['val_loss'], linewidth=0.5, color=c[0].get_color())
 
-ax[0].plot(history['val_acc'])
 ax[0].set_title('model accuracy')
 ax[0].set_ylabel('accuracy')
 ax[0].set_xlabel('epoch')
