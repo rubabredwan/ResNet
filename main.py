@@ -61,7 +61,7 @@ for net in (ResNet20, ResNet32, ResNet44, ResNet56):
     history = {'acc': [], 'loss': [], 'val_acc': [], 'val_loss': []}
     start_epoch = 0
 
-    def load_checkpoint()
+    def load_checkpoint():
         checkpoint = torch.load(path+net.__name__+'.pth')
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
